@@ -1,0 +1,62 @@
+- hosts:  all
+  become: true
+  tasks:
+  - name: Install required tools
+    apt: name={{item}} state=installed
+    with_items:
+    - unzip
+  - name: Make sure we can connect
+    ping:
+  - name: update the apt cache
+    apt: update_cache=yes cache_valid_time=3600
+# MySQL
+  - name: Install MySQL
+    apt: name={{item}}
+    with_items:
+    - mysql-server
+    - python-mysqldb
+  - name: Install add-apt-repostory
+    become: yes
+    apt: name=software-properties-common state=latest
+
+  - name: Add Oracle Java Repository
+    become: yes
+    apt_repository: repo='ppa:webupd8team/java'
+
+  - name: Accept Java 8 License
+    become: yes
+    debconf: name='oracle-java8-installer' question='shared/accepted-oracle-license-v1-1' value='true' vtype='select'
+
+  - name: Install Oracle Java 8
+    become: yes
+    apt: name={{item}} state=latest
+    with_items:
+    - oracle-java8-installer
+    - ca-certificates
+    - oracle-java8-set-default
+
+  - mysql_user: name="root"
+              password="123456"
+              check_implicit_admin=yes
+              login_user="root"
+              login_password="123456"
+              state=present
+
+  - name: Creating database
+    mysql_db: name=kitbasicoauto state=present login_user=root login_password=123456
+
+  - name: Create directory to exec app
+    file: 
+      path: /home/jdominguez/appscripts
+      state: directory
+      owner: jdominguez
+      group: jdominguez
+   
+
+  - name: Create directory app
+    file: 
+      path: /home/jdominguez/app
+      state: directory
+      owner: jdominguez
+      group: jdominguez
+ 
