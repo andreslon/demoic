@@ -1,14 +1,13 @@
-subscription_id = "8b56d223-7c2a-425b-a020-e8021bd2e3a2"
-//subscription_id = "4bdcf2f8-6352-4c70-aeb0-fe9704633fcc"
+subscription_id = ""
 
-client_id = "23f0426a-db59-44c4-a3fe-1b66843e2253"
-//client_id = "9b3db44c-21d3-4517-bcbe-bd0099654fa0"
+client_id = ""
 
-client_secret = "8TX/+OcBai5IRQ6u5UPEo9pGS3nL1cQIrVfyBUVfRDk="
-//client_secret = "0dfee17e-69d6-4148-b13c-a5b5f305b579"
 
-tenant_id = "6860571d-6fcd-4b97-99cd-c6e90d8ccfe8"
-//tenant_id = "d9475c06-3907-4aee-8798-3dc0fc4985a6"
+client_secret = ""
+
+
+tenant_id = ""
+
 
 location = "East US"
 
