@@ -1,0 +1,76 @@
+---
+# tasks file for server
+
+- name: Update apt cache
+  apt: update_cache=yes cache_valid_time=3600
+
+- name: Install required software
+  apt: name={{ item }} state=present
+  with_items:
+    - memcached
+    - libcurl3
+    - libmcrypt4
+    - libxmlrpc-epi0
+    - libmemcached11
+    - libmhash2
+    - php7.0-common
+    - mcrypt
+    - libmcrypt-dev
+    - psmisc
+    - unzip
+
+- name: Update apt
+  raw: apt-get update
+
+- name: Install python packages
+  apt: pkg={{ item }} state=present
+  with_items:
+    - vim
+    - python-pycurl
+    - python-mysqldb
+    - python-mysqldb
+
+- name : Install mysql
+  apt: name={{item}} state=installed
+  with_items:
+    - mysql-server
+    - python-mysqldb
+
+- name: Generate new root password
+  command: openssl rand -hex 7
+  register: mysql_new_root_pass
+
+- name: Remove anonymous users
+  mysql_user: name="" state=absent
+  
+- name: Remove test database
+  mysql_db: name=test state=absent
+
+- name: Update root password
+  mysql_user: name=root host={{item}}
+   password= {{mysql_new_root_pass.stdout}}
+  with_items:
+    - "{{ansible_hostname}}"
+    - 127.0.0.1
+    - ::1
+    - localhost
+
+- name: Output new root password
+  debug: msg= "New root password is {{mysql_new_root_pass.stdout}}"
+
+- name: Create my.cnf
+  template: src=./roles/mysql/templates/my.cnf dest=/root/my.cnf
+  when: mysql_new_root_pass.changed
+
+- name: Install nginx
+  apt: name=nginx state=installed
+
+- name: Start nginx
+  service: name=nginx state=started
+
+- name: Create nginx conf
+  template: src=./templates/default dest=/etc/nginx/sites-available/default
+
+- name: Restart nginx
+  service: name=nginx state=restarted
+

@@ -1,0 +1,21 @@
+---
+# tasks file for mysql
+- name: Create mysql database
+  mysql_db: name={{ wp_mysql_db }} state=present
+
+- name: Create mysql user
+  mysql_user: 
+    name={{ wp_mysql_user }} 
+    password={{ wp_mysql_password }} 
+    priv=*.*:ALL
+
+- name: Create WordPress MySQL database
+  mysql_db: name=wordpress state=present
+
+- name: Create WordPress MySQL user
+  mysql_user: name=wordpress host=localhost password=123456
+   priv=wordpress.*:ALL
+
+- name: Create wp-config
+  template: src=roles/wordpress/templates/wp-config.php
+   dest=/var/www/html/wp-config.php

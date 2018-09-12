@@ -1,0 +1,9 @@
+- hosts: wordpress
+  sudo: yes 
+  roles:
+    - server
+    - php
+    - mysql
+    - wordpress
+
+
