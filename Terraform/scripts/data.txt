@@ -1,0 +1,2 @@
+General Subscription
+$ az ad sp create-for-rbac --role="Contributor" --scopes="/subscriptions/your_subscription_id"
